@@ -4,8 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class TriforkBooksApplication {
+public class SpringbootTestApplication {
+
     public static void main(String[] args) {
-        SpringApplication.run(TriforkBooksApplication.class, args);
+        SpringApplication.run(SpringbootTestApplication.class, args);
     }
+
 }

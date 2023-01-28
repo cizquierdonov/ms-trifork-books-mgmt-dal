@@ -31,7 +31,7 @@ public class BookController {
      *              {@link ResponseEntity} object, with success code 0.
      */
     @PostMapping("/")
-    public ResponseEntity<?> create(@RequestBody Book book) {
+    public ResponseEntity<?> save(@RequestBody Book book) {
         return null;
     }
 
@@ -42,7 +42,7 @@ public class BookController {
      *              not exist, it returns error code -1.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<?> get(@PathVariable Long id) {
+    public ResponseEntity<?> findById(@PathVariable Long id) {
         return null;
     }
 

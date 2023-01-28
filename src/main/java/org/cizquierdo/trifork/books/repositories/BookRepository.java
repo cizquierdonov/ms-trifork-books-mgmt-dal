@@ -1,4 +1,8 @@
 package org.cizquierdo.trifork.books.repositories;
 
-public class BookRepository {
+import org.cizquierdo.trifork.books.models.Book;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface BookRepository extends JpaRepository<Book, Long> {
+
 }
