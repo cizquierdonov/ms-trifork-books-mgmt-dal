@@ -1,11 +1,15 @@
 package org.cizquierdo.trifork.books.services.impl;
 
+import org.cizquierdo.trifork.books.exceptions.BookDoesNotExistException;
+import org.cizquierdo.trifork.books.exceptions.BookNullValuesException;
 import org.cizquierdo.trifork.books.models.Book;
 import org.cizquierdo.trifork.books.repositories.BookRepository;
 import org.cizquierdo.trifork.books.services.BookService;
+import org.cizquierdo.trifork.books.util.Constants;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Implements orchestration business logic to manage the persistence of books in the system.
@@ -14,10 +18,10 @@ import java.util.List;
  */
 @Service
 public class BookServiceImpl implements BookService {
-    private BookRepository repository;
+    private BookRepository bookRepository;
 
-    public BookServiceImpl(BookRepository repository) {
-        this.repository = repository;
+    public BookServiceImpl(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
     }
 
     /**
@@ -25,8 +29,8 @@ public class BookServiceImpl implements BookService {
      * @return  List of {@link Book} objects.
      */
     @Override
-    public List<Book> list() {
-        return null;
+    public List<Book> findAll() {
+        return bookRepository.findAll();
     }
 
     /**
@@ -36,7 +40,11 @@ public class BookServiceImpl implements BookService {
      */
     @Override
     public Book save(Book book) {
-        return null;
+        if (!hasNullEmptyLessOrEqualsThanZeroValues(book)) {
+            return bookRepository.save(book);
+        } else {
+            throw new BookNullValuesException(Constants.BAD_REQUEST_NULL_VALUES_MESSAGE);
+        }
     }
 
     /**
@@ -46,17 +54,35 @@ public class BookServiceImpl implements BookService {
      */
     @Override
     public Book findById(Long id) {
-        return null;
+        Optional<Book> book = bookRepository.findById(id);
+
+        return book.orElseThrow(() -> new BookDoesNotExistException(Constants.BOOK_DOES_NOT_EXIST_MESSAGE));
     }
 
     /**
      * Update information for a specific book if exists in the database.
-     * @param id    Book identifier for the searching.
-     * @param book  Book information to update.
+     * @param book  Book information to update, including the ID of the existent book.
      */
     @Override
-    public void update(Long id, Book book) {
+    public void update(Book book) {
+        Optional<Book> existingBook = bookRepository.findById(book.getId());
 
+        if (existingBook.isPresent()) {
+            Book bookToUpdate = new Book();
+            bookToUpdate.setId(book.getId());
+            if (book.getTitle() != null) bookToUpdate.setTitle(book.getTitle());
+            if (book.getAuthor() != null) bookToUpdate.setAuthor(book.getAuthor());
+            if (book.getPrice() != null) bookToUpdate.setPrice(book.getPrice());
+            if (book.getLastUpdated() != null) bookToUpdate.setLastUpdated(book.getLastUpdated());
+
+            if (!hasNullEmptyLessOrEqualsThanZeroValues(bookToUpdate)) {
+                bookRepository.save(bookToUpdate);
+            } else {
+                throw new BookNullValuesException(Constants.BAD_REQUEST_NULL_VALUES_MESSAGE);
+            }
+        } else {
+            throw new BookDoesNotExistException(Constants.BOOK_DOES_NOT_EXIST_MESSAGE);
+        }
     }
 
     /**
@@ -65,6 +91,19 @@ public class BookServiceImpl implements BookService {
      */
     @Override
     public void delete(long id) {
-
+        Optional<Book> book = bookRepository.findById(id);
+        book.orElseThrow(() -> new BookDoesNotExistException(Constants.BOOK_DOES_NOT_EXIST_MESSAGE));
+        bookRepository.deleteById(id);
     }
+
+    private boolean hasNullEmptyLessOrEqualsThanZeroValues(Book book) {
+        if ( (book.getTitle() != null) && (book.getAuthor() != null) && (book.getPrice() != null)
+                && (book.getLastUpdated() != null) && !(book.getTitle().equals(""))
+                && !(book.getAuthor().equals("")) && (book.getPrice() > 0) ) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 }

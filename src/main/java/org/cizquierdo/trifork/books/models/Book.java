@@ -1,6 +1,7 @@
 package org.cizquierdo.trifork.books.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +22,7 @@ import java.util.Date;
  */
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name="books")
 public class Book {
@@ -36,7 +38,11 @@ public class Book {
     @Column(nullable = false)
     private Double price;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "last_updated", nullable = false)
+    @Column(name = "last_updated")
     private Date lastUpdated;
+
+    public Book clone() {
+       return new Book(this.id, this.title, this.author, this.price, this.lastUpdated);
+    }
 
 }
