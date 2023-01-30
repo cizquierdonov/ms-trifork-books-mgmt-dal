@@ -74,7 +74,7 @@ public class BookController {
             return ResponseEntity.ok(response);
         } catch (BookNullValuesException e) {
             LOGGER.info("[RES][HTTP 400] Error creating book: some fields are null: " + book.toString());
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage());
             response.put("code", Constants.ERROR_OPERATION_CODE);
             response.put("message", Constants.BAD_REQUEST_NULL_VALUES_MESSAGE);
             response.put("timestamp", TIMESTAMP_FORMAT.format(new Date()));
@@ -105,7 +105,7 @@ public class BookController {
 
         } catch (BookDoesNotExistException e) {
             LOGGER.info("[RES][HTTP 200] Book with ID '" + id + "' doesn't exist");
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage());
             response.put("code", Constants.ERROR_OPERATION_CODE);
             response.put("message", Constants.BOOK_DOES_NOT_EXIST_MESSAGE);
             response.put("timestamp", TIMESTAMP_FORMAT.format(new Date()));
@@ -139,14 +139,14 @@ public class BookController {
             return ResponseEntity.ok(response);
         } catch (BookNullValuesException e) {
             LOGGER.info("[RES][HTTP 400] Error updating book: some fields are null: " + book.toString());
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage());
             response.put("code", Constants.ERROR_OPERATION_CODE);
             response.put("message", Constants.BAD_REQUEST_EMPTY_VALUES_MESSAGE);
             response.put("timestamp", TIMESTAMP_FORMAT.format(new Date()));
             return ResponseEntity.badRequest().body(response);
         } catch (BookDoesNotExistException e) {
             LOGGER.info("[RES][HTTP 200] Book with ID '" + id + "' doesn't exist to update");
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage());
             response.put("code", Constants.ERROR_OPERATION_CODE);
             response.put("message", Constants.BOOK_DOES_NOT_EXIST_MESSAGE);
             response.put("timestamp", TIMESTAMP_FORMAT.format(new Date()));
@@ -175,7 +175,7 @@ public class BookController {
             return ResponseEntity.ok(response);
         } catch (BookDoesNotExistException e) {
             LOGGER.info("[RES][HTTP 200] Book with ID '" + id + "' doesn't exist to delete");
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage());
             response.put("code", Constants.ERROR_OPERATION_CODE);
             response.put("message", Constants.BOOK_DOES_NOT_EXIST_MESSAGE);
             response.put("timestamp", TIMESTAMP_FORMAT.format(new Date()));

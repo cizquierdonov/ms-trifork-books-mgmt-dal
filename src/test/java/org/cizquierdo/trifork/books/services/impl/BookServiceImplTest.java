@@ -70,8 +70,9 @@ class BookServiceImplTest {
 
     @Test
     void testSaveSuccessful() throws Exception {
-        Book expectedBook = BOOKS.get(0).clone();
         long bookId = 3L;
+        Book expectedBook = new Book(bookId, "Test Book", "Test Author", 99.99, null);
+
         // Given
         when(bookRepository.save(any(Book.class))).then(invocation -> {
             Book b = invocation.getArgument(0);
@@ -152,7 +153,7 @@ class BookServiceImplTest {
 
     @Test
     void testUpdateSuccessful() throws Exception {
-        Book book = BOOKS.get(0).clone();
+        Book book = new Book(1L, "Test Book", "Test Author", 99.99, null);
         Optional<Book> expectedBook = Optional.of(book);
 
         // Given

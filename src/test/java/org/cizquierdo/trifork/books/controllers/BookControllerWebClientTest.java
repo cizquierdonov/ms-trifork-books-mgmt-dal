@@ -11,12 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import static org.cizquierdo.trifork.books.controllers.Data.BOOKS;
-import static org.hamcrest.Matchers.*;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.*;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -36,15 +32,15 @@ class BookControllerWebClientTest {
                 .jsonPath("$.timestamp").exists()
                 .jsonPath("$.books").isArray()
                 .jsonPath("$.books").value(hasSize(2))
-                .jsonPath("$.books[0].id").isEqualTo(BOOKS.get(0).getId())
-                .jsonPath("$.books[0].title").isEqualTo(BOOKS.get(0).getTitle())
-                .jsonPath("$.books[0].author").isEqualTo(BOOKS.get(0).getAuthor())
-                .jsonPath("$.books[0].price").isEqualTo(BOOKS.get(0).getPrice())
+                .jsonPath("$.books[0].id").isEqualTo(1)
+                .jsonPath("$.books[0].title").isEqualTo("The Art Of War")
+                .jsonPath("$.books[0].author").isEqualTo("Sun Tzu")
+                .jsonPath("$.books[0].price").isEqualTo(20.05)
                 .jsonPath("$.books[0].lastUpdated").exists()
-                .jsonPath("$.books[1].id").isEqualTo(BOOKS.get(1).getId())
-                .jsonPath("$.books[1].title").isEqualTo(BOOKS.get(1).getTitle())
-                .jsonPath("$.books[1].author").isEqualTo(BOOKS.get(1).getAuthor())
-                .jsonPath("$.books[1].price").isEqualTo(BOOKS.get(1).getPrice())
+                .jsonPath("$.books[1].id").isEqualTo(2)
+                .jsonPath("$.books[1].title").isEqualTo("The Holy Cow")
+                .jsonPath("$.books[1].author").isEqualTo("Tarun Chopra")
+                .jsonPath("$.books[1].price").isEqualTo(15.59)
                 .jsonPath("$.books[1].lastUpdated").exists();
     }
 
@@ -149,15 +145,15 @@ class BookControllerWebClientTest {
                 .jsonPath("$.timestamp").exists()
                 .jsonPath("$.books").isArray()
                 .jsonPath("$.books").value(hasSize(3))
-                .jsonPath("$.books[0].id").isEqualTo(BOOKS.get(0).getId())
-                .jsonPath("$.books[0].title").isEqualTo(BOOKS.get(0).getTitle())
-                .jsonPath("$.books[0].author").isEqualTo(BOOKS.get(0).getAuthor())
-                .jsonPath("$.books[0].price").isEqualTo(BOOKS.get(0).getPrice())
+                .jsonPath("$.books[0].id").isEqualTo(1)
+                .jsonPath("$.books[0].title").isEqualTo("The Art Of War")
+                .jsonPath("$.books[0].author").isEqualTo("Sun Tzu")
+                .jsonPath("$.books[0].price").isEqualTo(20.05)
                 .jsonPath("$.books[0].lastUpdated").exists()
-                .jsonPath("$.books[1].id").isEqualTo(BOOKS.get(1).getId())
-                .jsonPath("$.books[1].title").isEqualTo(BOOKS.get(1).getTitle())
-                .jsonPath("$.books[1].author").isEqualTo(BOOKS.get(1).getAuthor())
-                .jsonPath("$.books[1].price").isEqualTo(BOOKS.get(1).getPrice())
+                .jsonPath("$.books[1].id").isEqualTo(2)
+                .jsonPath("$.books[1].title").isEqualTo("The Holy Cow")
+                .jsonPath("$.books[1].author").isEqualTo("Tarun Chopra")
+                .jsonPath("$.books[1].price").isEqualTo(15.59)
                 .jsonPath("$.books[1].lastUpdated").exists()
                 .jsonPath("$.books[2].id").isEqualTo(3)
                 .jsonPath("$.books[2].title").isEqualTo("1984")
