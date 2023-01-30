@@ -1,7 +1,7 @@
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: ms-trifork-books-mgmt-dal
+  name: ms-trifork-books-mgmt-dal-native
 spec:
   template:
     metadata:
@@ -9,7 +9,7 @@ spec:
         autoscaling.knative.dev/maxScale: '1'
     spec:
       containers:
-      - image: gcr.io/trifork-api/ms-trifork-books-mgmt-dal:1.0.0
+      - image: gcr.io/trifork-api/ms-trifork-books-mgmt-dal:1.0.0-native
         env:
         - name: SYS_LOGGING_LEVEL
           value: info
