@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -151,18 +152,20 @@ class BookServiceImplTest {
 
     @Test
     void testUpdateSuccessful() throws Exception {
-        Optional<Book> expectedBook = Optional.of(BOOKS.get(0));
+        Book book = BOOKS.get(0).clone();
+        Optional<Book> expectedBook = Optional.of(book);
 
         // Given
-        when(bookRepository.findById(anyLong())).thenReturn(expectedBook);
-        when(bookRepository.save(expectedBook.get())).thenReturn(expectedBook.get());
+        when(bookRepository.findById(anyLong())).thenReturn(Optional.of(book));
+        when(bookRepository.save(any(Book.class))).thenReturn(any(Book.class));
 
         // When
         try {
-            bookService.update(expectedBook.get());
+            bookService.update(book);
             // Then
             assertTrue(true);
         } catch (Exception e) {
+            e.printStackTrace();
             assertTrue(false);
         }
 

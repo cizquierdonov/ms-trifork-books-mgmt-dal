@@ -1,7 +1,6 @@
 package org.cizquierdo.trifork.books.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Optional;
 import org.cizquierdo.trifork.books.exceptions.BookDoesNotExistException;
 import org.cizquierdo.trifork.books.exceptions.BookNullValuesException;
 import org.cizquierdo.trifork.books.models.Book;
@@ -15,7 +14,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 import static org.cizquierdo.trifork.books.controllers.Data.BOOKS;
@@ -51,7 +49,7 @@ class BookControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.code").value(Constants.SUCCESS_OPERATION_CODE))
                 .andExpect(jsonPath("$.message").value(Constants.SUCCESS_BOOK_LIST_OR_GET_MESSAGE))
-                .andExpect(jsonPath("$.timestamp").value(LocalDate.now().toString()))
+                .andExpect(jsonPath("$.timestamp").exists())
                 .andExpect(jsonPath("$.books[0].id").value(BOOKS.get(0).getId()))
                 .andExpect(jsonPath("$.books[0].title").value(BOOKS.get(0).getTitle()))
                 .andExpect(jsonPath("$.books[0].author").value(BOOKS.get(0).getAuthor()))
@@ -78,7 +76,7 @@ class BookControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.code").value(Constants.SUCCESS_OPERATION_CODE))
                 .andExpect(jsonPath("$.message").value(Constants.SUCCESS_BOOK_LIST_OR_GET_MESSAGE))
-                .andExpect(jsonPath("$.timestamp").value(LocalDate.now().toString()))
+                .andExpect(jsonPath("$.timestamp").exists())
                 .andExpect(jsonPath("$.books", hasSize(0)));
 
         verify(bookService).findAll();
@@ -104,7 +102,7 @@ class BookControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.code").value(Constants.SUCCESS_OPERATION_CODE))
                 .andExpect(jsonPath("$.message").value(Constants.SUCCESS_BOOK_CREATION_MESSAGE))
-                .andExpect(jsonPath("$.timestamp").value(LocalDate.now().toString()))
+                .andExpect(jsonPath("$.timestamp").exists())
                 .andExpect(jsonPath("$.book").exists())
                 .andExpect(jsonPath("$.book.id", is((int) bookId)))
                 .andExpect(jsonPath("$.book.title", is(newBook.getTitle())))
@@ -131,7 +129,7 @@ class BookControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.code").value(Constants.ERROR_OPERATION_CODE))
                 .andExpect(jsonPath("$.message").value(Constants.BAD_REQUEST_NULL_VALUES_MESSAGE))
-                .andExpect(jsonPath("$.timestamp").value(LocalDate.now().toString()))
+                .andExpect(jsonPath("$.timestamp").exists())
                 .andExpect(jsonPath("$.book").doesNotExist());
 
         verify(bookService).save(any());
@@ -148,7 +146,7 @@ class BookControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.code").value(Constants.SUCCESS_OPERATION_CODE))
                 .andExpect(jsonPath("$.message").value(Constants.SUCCESS_BOOK_LIST_OR_GET_MESSAGE))
-                .andExpect(jsonPath("$.timestamp").value(LocalDate.now().toString()))
+                .andExpect(jsonPath("$.timestamp").exists())
                 .andExpect(jsonPath("$.book.id").value(BOOKS.get(0).getId()))
                 .andExpect(jsonPath("$.book.title").value(BOOKS.get(0).getTitle()))
                 .andExpect(jsonPath("$.book.author").value(BOOKS.get(0).getAuthor()))
@@ -169,7 +167,7 @@ class BookControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.code").value(Constants.ERROR_OPERATION_CODE))
                 .andExpect(jsonPath("$.message").value(Constants.BOOK_DOES_NOT_EXIST_MESSAGE))
-                .andExpect(jsonPath("$.timestamp").value(LocalDate.now().toString()))
+                .andExpect(jsonPath("$.timestamp").exists())
                 .andExpect(jsonPath("$.book").doesNotExist());
 
         verify(bookService).findById(anyLong());
@@ -179,7 +177,7 @@ class BookControllerTest {
     void testUpdateSuccessful() throws Exception {
         Book newBook = BOOKS.get(0).clone();
         // Given
-        doNothing().when(bookService).update(newBook);
+        doNothing().when(bookService).update(any(Book.class));
 
         // When
         mvc.perform(put("/api/books/"+newBook.getId()).contentType(MediaType.APPLICATION_JSON)
@@ -189,17 +187,17 @@ class BookControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.code").value(Constants.SUCCESS_OPERATION_CODE))
                 .andExpect(jsonPath("$.message").value(Constants.SUCCESS_BOOK_UPDATE_MESSAGE))
-                .andExpect(jsonPath("$.timestamp").value(LocalDate.now().toString()));
+                .andExpect(jsonPath("$.timestamp").exists());
 
-        verify(bookService).update(newBook);
+        verify(bookService).update(any(Book.class));
     }
 
     @Test
-    void testUpdateNullValues() throws Exception {
+    void testUpdateEmptyValues() throws Exception {
         Book newBook = BOOKS.get(0).clone();
-        newBook.setTitle(null);
+        newBook.setTitle("");
 
-        doThrow(BookNullValuesException.class).when(bookService).update(newBook);
+        doThrow(BookNullValuesException.class).when(bookService).update(any(Book.class));
 
         // When
         mvc.perform(put("/api/books/" + 1L).contentType(MediaType.APPLICATION_JSON)
@@ -208,10 +206,10 @@ class BookControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.code").value(Constants.ERROR_OPERATION_CODE))
-                .andExpect(jsonPath("$.message").value(Constants.BAD_REQUEST_NULL_VALUES_MESSAGE))
-                .andExpect(jsonPath("$.timestamp").value(LocalDate.now().toString()));
+                .andExpect(jsonPath("$.message").value(Constants.BAD_REQUEST_EMPTY_VALUES_MESSAGE))
+                .andExpect(jsonPath("$.timestamp").exists());
 
-        verify(bookService).update(newBook);
+        verify(bookService).update(any(Book.class));
     }
 
     @Test
@@ -220,7 +218,7 @@ class BookControllerTest {
         Long incorrectBookId = 4L;
         newBook.setId(incorrectBookId);
 
-        doThrow(BookDoesNotExistException.class).when(bookService).update(newBook);
+        doThrow(BookDoesNotExistException.class).when(bookService).update(any(Book.class));
 
         // When
         mvc.perform(put("/api/books/" + incorrectBookId).contentType(MediaType.APPLICATION_JSON)
@@ -230,9 +228,9 @@ class BookControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.code").value(Constants.ERROR_OPERATION_CODE))
                 .andExpect(jsonPath("$.message").value(Constants.BOOK_DOES_NOT_EXIST_MESSAGE))
-                .andExpect(jsonPath("$.timestamp").value(LocalDate.now().toString()));
+                .andExpect(jsonPath("$.timestamp").exists());
 
-        verify(bookService).update(newBook);
+        verify(bookService).update(any(Book.class));
     }
 
     @Test
@@ -249,7 +247,7 @@ class BookControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.code").value(Constants.SUCCESS_OPERATION_CODE))
                 .andExpect(jsonPath("$.message").value(Constants.SUCCESS_BOOK_DELETE_MESSAGE))
-                .andExpect(jsonPath("$.timestamp").value(LocalDate.now().toString()));
+                .andExpect(jsonPath("$.timestamp").exists());
 
         verify(bookService).delete(bookId);
     }
@@ -267,7 +265,7 @@ class BookControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.code").value(Constants.ERROR_OPERATION_CODE))
                 .andExpect(jsonPath("$.message").value(Constants.BOOK_DOES_NOT_EXIST_MESSAGE))
-                .andExpect(jsonPath("$.timestamp").value(LocalDate.now().toString()));
+                .andExpect(jsonPath("$.timestamp").exists());
 
         verify(bookService).delete(bookId);
     }

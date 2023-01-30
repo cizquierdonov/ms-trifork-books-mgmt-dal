@@ -8,6 +8,7 @@ import org.cizquierdo.trifork.books.services.BookService;
 import org.cizquierdo.trifork.books.util.Constants;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +31,7 @@ public class BookServiceImpl implements BookService {
      */
     @Override
     public List<Book> findAll() {
-        return bookRepository.findAll();
+        return bookRepository.findAll(/*Sort.by(Sort.Direction.ASC, "seatNumber")*/);
     }
 
     /**
@@ -41,6 +42,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book save(Book book) {
         if (!hasNullEmptyLessOrEqualsThanZeroValues(book)) {
+            book.setLastUpdated(new Date());
             return bookRepository.save(book);
         } else {
             throw new BookNullValuesException(Constants.BAD_REQUEST_NULL_VALUES_MESSAGE);
@@ -70,15 +72,15 @@ public class BookServiceImpl implements BookService {
         if (existingBook.isPresent()) {
             Book bookToUpdate = new Book();
             bookToUpdate.setId(book.getId());
-            if (book.getTitle() != null) bookToUpdate.setTitle(book.getTitle());
-            if (book.getAuthor() != null) bookToUpdate.setAuthor(book.getAuthor());
-            if (book.getPrice() != null) bookToUpdate.setPrice(book.getPrice());
-            if (book.getLastUpdated() != null) bookToUpdate.setLastUpdated(book.getLastUpdated());
+            bookToUpdate.setTitle(book.getTitle() != null ? book.getTitle() : existingBook.get().getTitle());
+            bookToUpdate.setAuthor(book.getAuthor() != null ? book.getAuthor() : existingBook.get().getAuthor());
+            bookToUpdate.setPrice(book.getPrice() != null ? book.getPrice() : existingBook.get().getPrice());
+            bookToUpdate.setLastUpdated(new Date());
 
-            if (!hasNullEmptyLessOrEqualsThanZeroValues(bookToUpdate)) {
+            if (!hasEmptyLessOrEqualsThanZeroValues(bookToUpdate)) {
                 bookRepository.save(bookToUpdate);
             } else {
-                throw new BookNullValuesException(Constants.BAD_REQUEST_NULL_VALUES_MESSAGE);
+                throw new BookNullValuesException(Constants.BAD_REQUEST_EMPTY_VALUES_MESSAGE);
             }
         } else {
             throw new BookDoesNotExistException(Constants.BOOK_DOES_NOT_EXIST_MESSAGE);
@@ -98,8 +100,15 @@ public class BookServiceImpl implements BookService {
 
     private boolean hasNullEmptyLessOrEqualsThanZeroValues(Book book) {
         if ( (book.getTitle() != null) && (book.getAuthor() != null) && (book.getPrice() != null)
-                && (book.getLastUpdated() != null) && !(book.getTitle().equals(""))
-                && !(book.getAuthor().equals("")) && (book.getPrice() > 0) ) {
+                && !(book.getTitle().equals("")) && !(book.getAuthor().equals("")) && (book.getPrice() > 0) ) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean hasEmptyLessOrEqualsThanZeroValues(Book book) {
+        if ( !(book.getTitle().equals("")) && !(book.getAuthor().equals("")) && (book.getPrice() > 0) ) {
             return false;
         } else {
             return true;

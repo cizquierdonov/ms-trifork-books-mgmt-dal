@@ -1,2 +1,2 @@
---INSERT INTO books (title, author, price, last_updated) VALUES ('The Art Of War', 'Sun Tzu', '20.05', '2023-01-27 00.05.30');
---INSERT INTO books (title, author, price, last_updated) VALUES ('The Holy Cow', 'Tarun Chopra', '15.59', '2022-01-28 10.15.27');
+INSERT INTO books (title, author, price, last_updated) VALUES ('The Art Of War', 'Sun Tzu', '20.05', '2023-01-27 00.05.30');
+INSERT INTO books (title, author, price, last_updated) VALUES ('The Holy Cow', 'Tarun Chopra', '15.59', '2022-01-28 10.15.27');
