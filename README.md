@@ -53,7 +53,7 @@ If you want to install in localhost, you need the following tools/configurations
 - Run the following command to clean, compila and run unit tests and integration tests: `mvn clean test`
 
 ## REST Operations & OpenAPI Specification 
-![OpenAPI_Logo_Pantone-1](https://user-images.githubusercontent.com/26800918/215619814-87947ee2-c05b-40b8-bc83-4306f7d25fd8.png)
+[![N|Solid](https://img.stackshare.io/service/3417/thumb_retina_pIea9Ji0.png)](https://editor.swagger.io/)
 
 You can read abount the API operations specifications and understand request & response data using any Swagger or OpenAPI client. It is recommended to use the https://editor.swagger.io/ website and copy and paste the content of the `openapi.yaml` file (inside GitLab repository root folder) on the page.
 
