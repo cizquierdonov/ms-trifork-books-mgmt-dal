@@ -1,0 +1,312 @@
+openapi: 3.0.1
+info:
+  title: Trifork API Books
+  description: Defines operations to manage Books
+  contact:
+    email: izqunited@gmail.com
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://editor.swagger.io
+servers:
+  - url: https://ms-trifork-books-mgmt-dal-gzl67i4mbq-uc.a.run.app/api
+  - url: http://localhost:8080/api
+paths:
+
+  /books:
+    get:
+      tags:
+        - Get Books
+      summary: Get All Books
+      description: "Returns a list of all books registered in the system, ordered by ID."
+      operationId: getBooks
+      responses:
+        200:
+          description: "Book list with the information of each book and the operation result."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResGetBooks200'
+
+    post:
+      tags:
+        - Create Book
+      summary: Creates a new Book
+      description: "Creates a new book in the system."
+      operationId: createBook
+      requestBody:
+        description: "Title, author and price fields are mandatory."
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReqCreateBook'
+        required: true
+      responses:
+        200:
+          description: "Response when book is successfuly created. The returned code is 0."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResCreateBook200'
+        400:
+          description: "Error in request fields values (null, empty values or price is less or equals than zero). The returned code is -1.</li></ul>"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResCreateBook400'
+
+  /books/{id}:
+    get:
+      tags:
+        - Get Book By ID
+      summary: Get a specific book by its ID
+      description: "Returns a specific existing book in the system, searching by its Identifier."
+      operationId: getBookById
+      parameters:
+        - name: id
+          in: path
+          description: Book identifier. It's an integer value.
+          schema:
+            type: integer
+            example: 1
+          required: true
+      responses:
+        200:
+          description: "Successful response when exists a book with the specified ID."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResGetBookById200'
+    put:
+      tags:
+        - Update Book
+      summary: Update an existing book
+      description: "Search a book by ID and update its fields. Book fields are optional. If a field is not specified in the request, it will simply not be updated and the original value will be kept."
+      operationId: updateBook
+      parameters:
+        - name: id
+          in: path
+          description: Book identifier. It's an integer value.
+          schema:
+            type: integer
+            example: 1
+          required: true
+      requestBody:
+        description: "Title, author and price fields are mandatory."
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReqUpdateBook'
+      responses:
+        200:
+          description: "Successful response when exists a book with the specified ID and is updated."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResUpdateBook200'
+        400:
+          description: "Response when specified fiels are empty or price is less or equals than zero. Returns -1 code."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResUpdateBook400'
+    delete:
+      tags:
+        - Delete Book
+      summary: Delete a specific book
+      description: "Search a book by ID and delete it."
+      operationId: deleteBook
+      parameters:
+        - name: id
+          in: path
+          description: Book identifier. It's an integer value.
+          schema:
+            type: integer
+            example: 1
+          required: true
+      responses:
+        200:
+          description: "Successful response when exists a book with the specified ID and is deleted."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResDeleteBook200'
+
+components:
+  schemas:
+    ResGetBooks200:
+      type: object
+      properties:
+        books:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 1
+              title:
+                type: string
+                example: "The Art Of War"
+              author:
+                type: string
+                example: "Sun Tzu"
+              price:
+                type: number
+                example: 20.05
+              lastUpdated:
+                type: string
+                example: "2023-01-27 00:05:30"
+        code:
+          type: integer
+          example: 0
+        message:
+          type: string
+          example: "Successful operation."
+        timestamp:
+          type: string
+          example: "2023-01-30T23:12:58.058Z"
+    ResGetBookById200:
+      type: object
+      properties:
+        book:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            title:
+              type: string
+              example: "The Art Of War"
+            author:
+              type: string
+              example: "Sun Tzu"
+            price:
+              type: number
+              example: 20.05
+            lastUpdated:
+              type: string
+              example: "2023-01-27 00:05:30"
+        code:
+          type: integer
+          example: 0
+        message:
+          type: string
+          example: "Successful operation."
+        timestamp:
+          type: string
+          example: "2023-01-30T23:12:58.058Z"
+    ResGeneric404:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: -1
+        message:
+          type: string
+          example: "There is no book for the ID."
+        timestamp:
+          type: string
+          example: "2023-01-30T23:12:58.058Z"
+    ReqCreateBook:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "The Art Of War"
+        author:
+          type: string
+          example: "Sun Tzu"
+        price:
+          type: number
+          example: 20.05
+    ResCreateBook200:
+      type: object
+      properties:
+        book:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            title:
+              type: string
+              example: "The Art Of War"
+            author:
+              type: string
+              example: "Sun Tzu"
+            price:
+              type: number
+              example: 20.05
+            lastUpdated:
+              type: string
+              example: "2023-01-27 00:05:30"
+        code:
+          type: integer
+          example: 0
+        message:
+          type: string
+          example: "The Book was created successfully."
+        timestamp:
+          type: string
+          example: "2023-01-30T23:12:58.058Z"
+    ResCreateBook400:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: -1
+        message:
+          type: string
+          example: "Some of the fields are null, empty, less or equals than zero."
+        timestamp:
+          type: string
+          example: "2023-01-30T23:12:58.058Z"
+    ReqUpdateBook:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "The Art Of War"
+        author:
+          type: string
+          example: "Sun Tzu"
+        price:
+          type: number
+          example: 99.99
+    ResUpdateBook200:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 0
+        message:
+          type: string
+          example: "Book updated successfully."
+        timestamp:
+          type: string
+          example: "2023-01-30T23:12:58.058Z"
+    ResUpdateBook400:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: -1
+        message:
+          type: string
+          example: "Some of the fields are empty, less or equals than zero."
+        timestamp:
+          type: string
+          example: "2023-01-30T23:12:58.058Z"
+    ResDeleteBook200:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 0
+        message:
+          type: string
+          example: "Book deleted successfully."
+        timestamp:
+          type: string
+          example: "2023-01-30T23:12:58.058Z"

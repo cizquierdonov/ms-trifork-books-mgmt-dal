@@ -1,0 +1,21 @@
+curl --location --request GET 'http://localhost:8080/api/books' -v
+
+curl --location --request GET 'http://localhost:8080/api/books/1' -v
+
+curl --location --request GET 'http://localhost:8080/api/books/2' -v
+
+curl --location --request POST 'http://localhost:8080/api/books' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "title": "1984",
+    "author": "George Orwell",
+    "price": "25.99"
+}' -v
+
+curl --location --request PUT 'http://localhost:8080/api/books/3' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "price": "199.99"
+}' -v
+
+curl --location --request DELETE 'http://localhost:8080/api/books/3' -v

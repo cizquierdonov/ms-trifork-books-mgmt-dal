@@ -1,0 +1,21 @@
+curl --location --request GET 'https://ms-trifork-books-mgmt-dal-gzl67i4mbq-uc.a.run.app/api/books' -v
+
+curl --location --request GET 'https://ms-trifork-books-mgmt-dal-gzl67i4mbq-uc.a.run.app/api/books/1' -v
+
+curl --location --request GET 'https://ms-trifork-books-mgmt-dal-gzl67i4mbq-uc.a.run.app/api/books/2' -v
+
+curl --location --request POST 'https://ms-trifork-books-mgmt-dal-gzl67i4mbq-uc.a.run.app/api/books' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "title": "1984",
+    "author": "George Orwell",
+    "price": "25.99"
+}' -v
+
+curl --location --request PUT 'https://ms-trifork-books-mgmt-dal-gzl67i4mbq-uc.a.run.app/api/books/3' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "price": "199.99"
+}' -v
+
+curl --location --request DELETE 'https://ms-trifork-books-mgmt-dal-gzl67i4mbq-uc.a.run.app/api/books/3' -v
