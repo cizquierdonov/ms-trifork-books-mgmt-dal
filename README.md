@@ -49,7 +49,7 @@ If you want to install in localhost, you need the following tools/configurations
 
 ## Compiling, Executing & Run Unit/Integration Tests
 
-- Run the following command to clean, compile and startup the application, inside repository rool folder: `mvn clean spring-boot:run`
+- Run the following command to clean, compile and startup the application, inside repository rool folder: `mvn clean spring-boot:run`. The application is started by default in [http://localhost:8080](http://localhost:8080)
 - Run the following command to clean, compila and run unit tests and integration tests: `mvn clean test`
 
 ## REST Operations & OpenAPI Specification 
@@ -59,4 +59,4 @@ You can read abount the API operations specifications and understand request & r
 
 You can try calling the operations from there selecting https://ms-trifork-books-mgmt-dal-gzl67i4mbq-uc.a.run.app/ server.
 
-For more information about how to use and execute REST operations, please download and import in Postman the collection file `./postman/Trifork_Books_API.postman_collection.json` inside GitLab repository.
+For more information about how to use and execute REST operations, please download the http files `./request` folder, inside GitLab repository.
